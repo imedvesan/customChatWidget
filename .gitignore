@@ -8,3 +8,4 @@ node_modules
 .eslintcache
 /.vscode
 .vscode
+/public/*_test.html
