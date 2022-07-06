@@ -1,84 +1,188 @@
-# Amazon Connect Chat UI Examples
+# Custom Chat Widget Usage
 
-This repo contains examples on how to implement the customer side of Amazon Connect chat. Please refer to the README under each solution to see the complete details as to what each solution does and how to deploy it.
+## Description
 
-Before working on projects in this repo, we suggest taking time to follow [the public AWS documentation](https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-get-started.html) on Amazon Connect around chat.
+Custom Chat Widget is a JavaScript library that enables you to place a Chat Button (or Icon), Chat Form, and Chat Widget at your website. When this library is imported, using `script` tag in a web page, it exposes `AmazonCustomChatWidget.ChatInterface.init()` method to the global `window` object. This method can be invoked with various properties, to get the Amazon Connect Chat in the website.
 
-## Solutions
+Custom Chat Widget library simplifies the process of embedding, styling, and positioning Chat widget, with Chat Form, on your web page. On top of that, you also have a flexibility to customize this library, according to your business requirements.
 
-At the moment, these are the solutions in this repo:
+Below steps explain how Custom Chat Widget works on a web page
 
-1. **[cloudformationTemplates/asyncCustomerChatUX](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/cloudformationTemplates/asyncCustomerChatUX)**
-   The Async Customer Chat solution spins up a website that uses a pre-built chat widget for the customer side. It also contains AWS resources that help enable the asynchronous chat experience across devices.
-2. **[cloudformationTemplates/startChatContactAPI](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/cloudformationTemplates/startChatContactAPI)**
-   The Start Chat Contact API solution creates a simple API to start the chat from the customer side. Use this solution if you want to custom build your customer chat widget. There is also an example html file in this repo that shows you how to make subsequent calls to Chat JS to send messages between the customer and agent after the chat is started.
-3. **[cloudformationTemplates/urlPreviewForAsyncChat](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/cloudformationTemplates/urlPreviewForAsyncChat)**
-   The Url preview for async chat solution is an enhancement of the Async Customer Chat solution, which presents URL previews in chat. For example, entering `www.aws.com` in the chat window will display a rich preview with an image of the website for a better experience. There is also an example html file in this repo that shows you how to make subsequent calls to Chat JS to send messages between the customer and agent after the chat is started.
-4. **[samTemplates/amazon-connect-interactive-messages-example](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/samTemplates/amazon-connect-interactive-messages-example)**
-   Interactive messages in Amazon Connect Chat allow contact centers to provide personalized prompts and response options that customers can easily select from. This serverless application is a sample lambda function which implements Amazon Connect interactive message templates (lists, lists with images, and a time picker) as described in the AWS Contact Center blog post [How to enable interactive messages in Amazon Connect chat](https://aws.amazon.com/blogs/contact-center/easily-set-up-interactive-messages-for-your-amazon-connect-chatbot/).
+1. To enable customers to start a new Chat on your web page, you could either use `ChatIcon` or `ChatButton`.
 
-5. **[customChatWidget](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/customChatWidget)**
-   Custom Chat Widget for Amazon Connect, with a Chat Form that can be easily plugged into a webpage. This solution helps customers to have Amazon Connect Custom Chat Widget in their website, by applying simple configuration parameters. It also makes customizing the `amazon-connect-interface.js` file easier, and can be used as an easy way to host custom widget on a webpage.
+   Chat Icon:  
+   ![ChatIcon](screenshots/ChatIcon.png)
 
-## Resources
+   Chat Button:  
+   ![ChatButton](screenshots/chatButton.png)
 
-Here are a few resources to help you implement chat in your contact center:
+2. When `ChatIcon` (or `ChatButton`) is clicked, `ChatForm` is presented to the customer. The fields in `ChatForm` are customizable.
 
-- [Amazon Connect ChatJS](https://github.com/amazon-connect/amazon-connect-chatjs)
-- [Amazon Connect Streams](https://github.com/aws/amazon-connect-streams)
-- [Amazon Connect Service SDK](https://docs.aws.amazon.com/connect/latest/APIReference/Welcome.html) (Download the SDK [here](https://github.com/aws/))
-- [Amazon Connect Participant Service SDK](https://docs.aws.amazon.com/connect-participant/latest/APIReference/Welcome.html) (Download the SDK [here](https://github.com/aws/))
-- [iOS Mobile SDK](https://github.com/aws-amplify/aws-sdk-ios)
-  - [Amazon Connect Participant Service](https://cocoapods.org/pods/AWSConnectParticipant)
-  - [Amazon Connect Service](https://cocoapods.org/pods/AWSConnect)
-- [Android SDK](https://github.com/aws-amplify/aws-sdk-android)
-- [Open source code for the Chat Interface](https://github.com/amazon-connect/amazon-connect-chat-interface)
+   ![Chat Form](screenshots/chatForm.png)
 
-## Enabling Chat in an Existing Amazon Connect Contact Center
+3. When this form is submitted by the customer, Custom Chat Widget opens and starts a new Chat contact, for self service, and/or transfer to a chat agent.
 
-If your instance was created before the release of the chat feature, here's an overview of what you need to do to enable chat, as well as what has changed.
+   ![Chat Widget](screenshots/chatWidget.png)
 
-1. Because you have an existing instance, you'll need to enable chat testing mode to use the simulated environment we've provided for testing. Follow these steps: 
-    1. In Amazon Connect, choose Users, Security profiles. 
-    2. Select the security profile that you want update, such as Admin. 
-    3. Expand Numbers and flows. 
-    4. For Chat test mode choose Enable/Disable. 
-    5. Choose Save. Now people who are assigned to that security profile will be able to use the simulated chat experience.  
-    _Note: Another option is to create a new security profile specifically for testing chat and assign testers to that profile._
-    ![screenshot of enabling chat on a security profile](images/securityProfile.png)
+## Prerequisites
 
-2. Enable Chat in your Routing Profile. Go into your instance's website and go to the Routing Profiles section. Edit the Routing Profile for your agent and add the Basic Queue to the profile with the chat channel enabled.
-    ![screenshot of enabling chat on a routing profile](images/chatRoutingProfile.png)
-3. Your existing contacts flows will also work for chat! You just need to update them to specify how you want them to work.
-    We've added the following action blocks:
+- Amazon Connect instance, ready to receive chats.  
+   [Refer to : Enabling Chat in Existing Amazon Connect Contact Center section in this link](../README.md#enabling-chat-in-an-existing-amazon-connect-contact-center)
 
-    - [Wait](https://docs.aws.amazon.com/connect/latest/adminguide/contact-blocks.html#wait)
-    - [Set disconnect flow](https://docs.aws.amazon.com/connect/latest/adminguide/contact-blocks.html#set-disconnect-flow)
+- An Amazon Connect Contact Flow, ready to receive chat contacts.  
+   [Refer to this link on how to create a Contact Flow for Chat](https://docs.aws.amazon.com/connect/latest/adminguide/chat.html)
 
-    And updated these blocks for chat:
+- Amazon Connect Chat backend.  
+   [Refer to this link on how to deploy the Chat backend](../cloudformationTemplates/asyncCustomerChatUX/README.md)
 
-    - [Play prompt](https://docs.aws.amazon.com/connect/latest/adminguide/contact-blocks.html#play)
-    - [Get customer input](https://docs.aws.amazon.com/connect/latest/adminguide/contact-blocks.html#get-customer-input)
-    - [Store customer input](https://docs.aws.amazon.com/connect/latest/adminguide/contact-blocks.html#store-customer-input)
-    - [Set recording behavior](https://docs.aws.amazon.com/connect/latest/adminguide/contact-blocks.html#set-recording-behavior)
+## Usage
 
-4. Your metric reports and the contact trace records will now reflect chat as a channel. Note the following metrics:
+- Import `amazon-connect-chat-interface.js` and `ACChat.js`, using `script` tag in your HTML. Please note that the order of this import is important.
 
-    - [Agent Activity](https://docs.aws.amazon.com/connect/latest/adminguide/real-time-metrics-definitions.html#agent-activity-state-real-time): This metric used to be named Agent Status. Existing reports that used Agent Status as the column name will start using Agent Activity as the column name.
-    - [Availability](https://docs.aws.amazon.com/connect/latest/adminguide/real-time-metrics-definitions.html#availability-real-time): This metric has a new definition to account for chat. The change has no impact on metrics for voice calls.
-    - [Capacity](https://docs.aws.amazon.com/connect/latest/adminguide/real-time-metrics-definitions.html#capacity-real-time): This is a new real-time metric.
-    - [Contact State](https://docs.aws.amazon.com/connect/latest/adminguide/real-time-metrics-definitions.html#contact-state-real-time): This metric has a few changes so the states are better aligned to what the agent sees in the updated CCP.
+  [amazon-connect-chat-interface.js](public/amazon-connect-chat-interface.js)
 
-    Check out the Real-time Metrics Definitions and Historical Metrics Definitions. These articles have been updated to reflect the addition of chat.
+  [ACChat.js](public/ACChat.js)
 
-5. Enable Chat Transcripts in the Amazon Connect console by viewing your instance settings and clicking on the 'Data Storage' section and adding an S3 bucket in the 'Chat Transcripts' section.
-    ![screenshot of enabling chat transcripts](images/chatTranscript.png)
-6. If your business is using Amazon Lex bots in your contact center, and your Amazon Connect instance was created before October 12, 2018, we recommend doing the following step to ensure your service-linked role has "lex:PostText" permissions:
-    - Add a new Amazon Lex bot (and then you can remove it). The act of adding the Amazon Lex bot will automatically update your permissions.
-7. When you're ready to deploy the updated CCP, give the URL for it to those agents who are going handle voice and chat contacts, or only chat contacts. Those agents who are only handling voice contacts can continue using the original CCP. To learn more about the updated CCP interface, see [Chat with Contacts](https://docs.aws.amazon.com/connect/latest/adminguide/work-with-chats.html).
-8. For instances created prior to October 12, 2018, the Test Chat experience in the Amazon Connect website is not available. Please follow instructions in the [asyncCustomerChatUX solution](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/cloudformationTemplates/asyncCustomerChatUX) to deploy your own sample customer UI and test chat.
-9. Enable interactive messages for your chat widget in Amazon Connect by reading the blog on how to [easily set up interactive messages for your Amazon Connect chatbot](https://aws.amazon.com/blogs/contact-center/easily-set-up-interactive-messages-for-your-amazon-connect-chatbot/) for detailed instructions.
+  ```html
+  <script src="/amazon-connect-chat-interface.js"></script>
+  <script src="/ACChat.min.js"></script>
+  ```
 
-## License Summary
+- Once `ACChat.js` is imported, it exposes `AmazonCustomChatWidget.ChatInterface.init()` method. This method can be invoked with certain properties, to place Custom Chat Widget on a web page.
+- Below description explains each of those properties
 
-This sample code is made available under the MIT-0 license. See the LICENSE file.
+  1. `containerId` : Specify a HTML Element ID, where Custom Chat Widget is going to be placed. Preferably, provide the root ID# of the document body.
+  2. `initiationIcon`: Can be set as `icon` or `button`.
+  3. `region`: Specify the region where Amazon API Gateway was deployed.
+  4. `name`: Specify customer's name, which is passed during Chat initiation. This field is mandatory. It can have one of the below values:
+
+     - A variable
+     - A constant
+     - Refer to the form input field `Name` like this: `refer|inputFields|Name`.
+
+  5. `username`: Specify customer's username, which is passed during Chat initiation. This field is mandatory. It can have one of the below values:
+
+     - A variable
+     - A constant
+     - Refer to the input field `UserName` like this: `refer|inputFields|UserName`.
+
+  6. `apiGateway`: Provide Amazon API Gateway URL for your Amazon Connect Chat backend, that was deployed using the Cloudformation template. (`https://${apiId}.execute-api.${region}.amazonaws.com/Prod`)
+
+  7. `contactFlowId`: Provide Amazon Connect Contact Flow ID (not full ARN).
+
+     For example: If the Contact flow ARN : `arn:aws:connect:<region>:111111111111:instance/11111111-1111-1111-1111-1111111111/contact-flow/XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX`, then the contact flow ID will be `XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX`.
+
+  8. `instanceId`: Provide your Amazon Connect Instance ID (not full ARN).
+
+     For example: If the Instance ARN : `arn:aws:connect:<region>:11111111111111:instance/XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX` , then the instance ID will be `XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX`.
+
+  9. `contactAttr`: This is an object that can have keys and values. Basically, these attributes will be sent to your Contact Flow during chat initiation.
+
+  10. `preChatForm`: This form can be used in identifying your customer, by collecting customer's information, like their name or email. These attributes can also be sent to Amazon Connect Contact Flow, so we don't have to identify the customer again in the bot, and can just proceed with verification. This helps to reduce Average Handle Time (AHT). This field is not mandatory. If not provided, no chat form will be presented to the customer.
+
+      - `visible`: This can set to `true` or `false`.
+      - `inputFields`: An array of objects. Each object has `name` and `validation` field. The `name` represents the label of the input field in `ChatForm`, and the `validation` field can be set as `required` or `notrequired`.
+
+      ```js
+      preChatForm:{
+          visible: true,
+          inputFields:[
+              {
+                  name: "Name",
+      		      validation: "required"
+              },
+              {
+                  name: "UserName",
+      		      validation: "required"
+              },
+              {
+                  name: "Email",
+      		      validation: "notrequired"
+              }
+          ]
+      }
+
+      ```
+
+  11. `primaryColor`: Specify the color of `ChatIcon` or `ChatButton`, then `ChatForm` and `ChatWidget`.
+
+  12. `description`: Specify the description that will be displayed in `ChatWidget`.
+
+- Below is a simple example on how `ACChat` can be invoked in a HTML page:
+
+  [public/index.html](public/index.html)
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Chat</title>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script src="/amazon-connect-chat-interface.js"></script>
+		<script src="/ACChat.js"></script>
+		<script>
+			AmazonCustomChatWidget.ChatInterface.init({
+				containerId: 'root',
+				initiationIcon: 'icon', // icon/button
+				region: 'us-east-1',
+				name: 'refer|inputFields|Name', // **** Mandatory**** Add a constant or a variable for chat without form or if you have a form then you can refer it to the input fields like "refer|inputFields|Name"
+				username: 'refer|inputFields|UserName', // **** Mandatory**** Add a constant or a variable for chat without form or if you have a form then you can refer it to the input fields like "refer|inputFields|UserName"
+				apiGateway: 'https://<XXXXXXXXX>.execute-api.us-east-1.amazonaws.com/Prod' /* API Gateway URI */,
+				contactFlowId: 'XXXXXX-XXXX-XXX-XXX-XXXXXXX',
+				instanceId: 'XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX',
+				contactAttr: {
+					sampleKey1: 'sampleValue1',
+					sampleKey2: 'sampleValue2',
+				},
+				preChatForm: {
+					visible: true,
+					inputFields: [
+						{
+							name: 'Name',
+							validation: 'required',
+						},
+						{
+							name: 'UserName',
+							validation: 'required',
+						},
+						{
+							name: 'Email',
+							validation: 'notrequired',
+						},
+					],
+				},
+				primaryColor: '#003da5',
+				description:
+					'Welcome to Chat' /* the description that goes in the header*/,
+			});
+		</script>
+	</body>
+</html>
+```
+
+## How to customize the widget
+
+- The source code in `/customChatWidget/src` folder can be used to customize `ChatIcon` , `ChatButton` and `ChatForm`.
+
+- In your Terminal, clone the repo: `git clone https://github.com/amazon-connect/amazon-connect-chat-ui-examples.git`
+
+- Go to `/customChatWidget`.
+
+- Run `npm install` to install `node_modules`.
+
+- You can now customize any of the components in `customChatWidget/src/components` according to your business requirements.
+
+- Run `npm run build` to build a production package, using Babel. The build process produces minified `ACChat.js` file, and stores it into `public` folder. Please note that `webpack.dev.js` produces a development version, which includes console logs. For a production build, please use `webpack.prod.js`.
+
+- For testing, run `npm run dev-build` to build a dev package using Babel and `webpack.dev.js` and saves the built minified file into the `public` folder with name `ACChat.js`. The dev version will have console logs.
+
+## Testing
+
+- Once the build has completed, you can test `index.html` in `/customChatWidget/public`, using *Live Server* extension, in case you are using VS Code.
+
+  [VS Code Live Server Extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
