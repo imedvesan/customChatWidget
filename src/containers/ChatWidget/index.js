@@ -18,9 +18,9 @@ const ChatWidget = ({
     setCurrentState = () => log('No Function'),
     setToggleIcon, setHideWidget,
     setShowWidget
-    }) => {
+}) => {
     log(">>> Init");
-    const [loading, setLoading ] = useState(true);
+    const [loading, setLoading] = useState(true);
     const { primaryColor, description, region, apiGateway, contactFlowId, instanceId } = useAppConfig();
     if (Object.keys(dataFromInputForm).length !== 0) log('dataFromInputForm: ', dataFromInputForm);
     // eslint-disable-next-line
@@ -31,11 +31,11 @@ const ChatWidget = ({
         setLoading(false);
         chatSession.incomingItemDecorator = function (item) {
             if ([chatParties.SYSTEM_MESSAGE].indexOf(item.displayName) !== -1) {
-                item.displayName = "";
+                item.displayName = "KCIT BOT";
             }
 
             if ([chatParties.BOT].indexOf(item.displayName) !== -1) {
-                item.displayName = "";
+                item.displayName = "KCIT BOT";
             }
             return item;
         }
@@ -81,12 +81,12 @@ const ChatWidget = ({
         return data
     }
 
-    const getNameAndUserName = (formData={}, initialPropertiesName='', initialPropertiesUsername='') => {
+    const getNameAndUserName = (formData = {}, initialPropertiesName = '', initialPropertiesUsername = '') => {
         log('Inside getNameAndUserName');
         let name = chatWidgetDefaults.NAME;
         let username = chatWidgetDefaults.USER_NAME;
         // If form data is available set the name and username from the formdata
-        if (Object.keys(formData).length !== 0 ) {
+        if (Object.keys(formData).length !== 0) {
             log(`formData`, formData);
             // Set name 
             if (initialPropertiesName && initialPropertiesName.includes(chatWidgetDefaults.REFER_INDICATOR)) {
@@ -114,16 +114,16 @@ const ChatWidget = ({
             error(`username field has value ${initialPropertiesUsername} which is not referenced correct in your initial invocation of this library`)
             username = chatWidgetDefaults.USER_NAME;
         }
-        
 
-        return {name, username}
+
+        return { name, username }
     }
 
-    const getContactAttrsForContactFlow = (name = '', username = '', dataFromInputForm = {}, initialPropertiesContAttrs,initialPropertiesName, initialPropertiesUsername) => {
+    const getContactAttrsForContactFlow = (name = '', username = '', dataFromInputForm = {}, initialPropertiesContAttrs, initialPropertiesName, initialPropertiesUsername) => {
         log('>>> Inside getContactAttrsForContactFlow');
         let attrs = {};
         attrs.customerName = (!initialPropertiesName.includes(chatWidgetDefaults.REFER_INDICATOR)) ? name : chatWidgetDefaults.CUSTOMER_NAME;
-        
+
         if (!initialPropertiesUsername.includes(chatWidgetDefaults.REFER_INDICATOR)) {
             attrs.username = username;
         }
@@ -149,7 +149,7 @@ const ChatWidget = ({
                 headerConfig: {      // Use the optional headerConfig and footerConfig to customize your widget
                     isHTML: true,
                     render: () => {
-                    return (`<div class="header-wrapper">
+                        return (`<div class="header-wrapper">
                                 <h2 class="welcome-text">${description}</h2>
                             </div>`)
                     }
